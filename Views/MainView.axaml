@@ -1,0 +1,16 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ReceiptPDFBuilder.Views.MainView"
+             xmlns:vm="clr-namespace:ReceiptPDFBuilder.ViewModels"
+             x:DataType="vm:MainViewModel">
+  <StackPanel Orientation="Vertical"
+              Spacing="2">
+    <Label Content="ありがとうございます日本"
+           FontFamily="{StaticResource NotoSansJP}"/>
+    <Button Content="Choose Folder"
+            Command="{Binding ChooseFolder}" />
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,19 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ReceiptPDFBuilder.App"
+             xmlns:viewModels="clr-namespace:ReceiptPDFBuilder.ViewModels"
+             xmlns:views="clr-namespace:ReceiptPDFBuilder.Views"
+             RequestedThemeVariant="Default">
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+    <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+            <views:MainView/>
+        </DataTemplate>
+    </Application.DataTemplates>
+    <Application.Resources>
+        <FontFamily x:Key="NotoSans">avares://ReceiptPDFBuilder/Assets/Fonts/Noto_Sans/static#Noto Sans</FontFamily>
+        <FontFamily x:Key="NotoSansJP">avares://ReceiptPDFBuilder/Assets/Fonts/Noto_Sans_JP/static#Noto Sans JP</FontFamily>
+    </Application.Resources>
+</Application>
