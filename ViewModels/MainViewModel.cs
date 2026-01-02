@@ -129,6 +129,7 @@ class MainViewModel : BaseViewModel, IFontResolver
                 // Save frame as jpg
                 var outputPath = Path.Combine(convertedDir, info.Name + ".jpg");
                 mImage.Quality = 80;
+                mImage.Scale((uint)Math.Floor(mImage.Width * 0.5), (uint)Math.Floor(mImage.Height * 0.5));
                 mImage.Write(outputPath);
                 fileName = Path.Combine("Converted", info.Name + ".jpg");
                 Console.WriteLine("HEIC image fileName is now {0}", fileName);
