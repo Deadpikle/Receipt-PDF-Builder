@@ -67,7 +67,7 @@ class MainViewModel : BaseViewModel, IFontResolver
 
     public byte[]? GetFont(string faceName)
     {
-        LogInfo(string.Format("Getting font {0}", faceName));
+        LogInfo(string.Format("Loading font {0}", faceName));
         if (faceName == "Noto Sans JP")
         {
             return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf"));
@@ -81,7 +81,7 @@ class MainViewModel : BaseViewModel, IFontResolver
 
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
     {
-        LogInfo(string.Format("Resolving familyname {0}", familyName));
+        // LogInfo(string.Format("Resolving font name {0}", familyName));
         if (familyName == "Noto Sans JP")
         {
             if (bold)
@@ -197,7 +197,7 @@ class MainViewModel : BaseViewModel, IFontResolver
         string filename = Path.Join(folderName, outputFileName);
         LogInfo("Saving document to disk...");
         pdfRenderer.PdfDocument.Save(filename);
-        LogInfo("PDF output to: " + filename);
+        LogInfo("Saved PDF output to: " + filename);
         IsCreatingPDF = false;
         return;
     }
