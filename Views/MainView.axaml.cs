@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
@@ -14,7 +15,10 @@ namespace ReceiptPDFBuilder.Views
 
         private void LogBlock_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
         {
-            LogScrollView.ScrollToEnd();
+            if (e.Property.ToString() == "Text")
+            {
+                LogScrollView.ScrollToEnd();
+            }
         }
     }
 }
