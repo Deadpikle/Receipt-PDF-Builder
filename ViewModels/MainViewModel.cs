@@ -161,6 +161,7 @@ class MainViewModel : BaseViewModel, IFontResolver
         files.Sort();
         GlobalFontSettings.FontResolver = this;
         GlobalFontSettings.FallbackFontResolver = new FailsafeFontResolver();
+        var hasAddedData = false;
         for (var i = 0; i < files.Length; i++)
         {
             var file = files[i];
@@ -168,6 +169,10 @@ class MainViewModel : BaseViewModel, IFontResolver
             if (fileName == ".DS_Store" || fileName == outputFileName)
             {
                 continue;
+            }
+            if (i > 0 && hasAddedData)
+            {
+                section.AddPageBreak();
             }
             var imageTitlePar = section.AddParagraph();
             imageTitlePar.Format.Alignment = ParagraphAlignment.Center;
@@ -220,10 +225,7 @@ class MainViewModel : BaseViewModel, IFontResolver
                     image.Width = imageWidth;
                 }
             }
-            if (i < files.Length - 1)
-            {
-                section.AddPageBreak();
-            }
+            hasAddedData = true;
         }
         var pdfRenderer = new PdfDocumentRenderer
         {
