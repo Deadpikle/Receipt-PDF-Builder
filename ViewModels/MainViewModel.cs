@@ -60,7 +60,25 @@ class MainViewModel : BaseViewModel, IFontResolver
                 LogInfo("Chosen folder: " + folder.Path.LocalPath);
                 if (Directory.Exists(folder.Path.LocalPath))
                 {
-                    await Task.Run(() => CreatePDF(folder.Path.LocalPath));
+                    try
+                    {
+                        await Task.Run(() => CreatePDF(folder.Path.LocalPath));
+                    } catch (Exception e)
+                    {
+                        LogInfo("PDF process failed! Reason: " + e.Message);
+                        if (e.StackTrace != null)
+                        {
+                            LogInfo(e.StackTrace);
+                        }
+                        if (e.InnerException != null)
+                        {
+                            LogInfo("Inner exception: " + e.InnerException.Message);
+                            if (e.InnerException.StackTrace != null)
+                            {
+                                LogInfo(e.InnerException.StackTrace);
+                            }
+                        }
+                    }
                 }
             }
         }
