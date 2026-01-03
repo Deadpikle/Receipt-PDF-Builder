@@ -17,8 +17,11 @@ namespace ReceiptPDFBuilder.ViewModels;
 class MainViewModel : BaseViewModel, IFontResolver
 {
 
+    private string _baseDir;
+
     public MainViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
     {
+        _baseDir = Path.GetDirectoryName(Environment.ProcessPath) ?? "";
     }
 
     public async void ChooseFolder()
@@ -48,11 +51,11 @@ class MainViewModel : BaseViewModel, IFontResolver
         Console.WriteLine("Getting font {0}", faceName);
         if (faceName == "Noto Sans JP")
         {
-            return File.ReadAllBytes("Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf");
+            return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf"));
         }
         if (faceName == "Noto Sans JP Bold")
         {
-            return File.ReadAllBytes("Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf");
+            return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf"));
         }
         return null;
     }
