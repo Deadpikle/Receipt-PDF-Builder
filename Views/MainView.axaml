@@ -8,8 +8,6 @@
              x:DataType="vm:MainViewModel">
   <StackPanel Orientation="Vertical"
               Spacing="2">
-    <Label Content="ありがとうございます日本"
-           FontFamily="{StaticResource NotoSansJP}"/>
     <Button Content="Choose Folder"
             Command="{Binding ChooseFolder}" />
   </StackPanel>
