@@ -10,8 +10,12 @@
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishTrimmed>true</PublishTrimmed>
+    <PublishAot>true</PublishAot>
     <AssemblyName>Receipt PDF Builder</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <TrimmerRootAssembly Include="PdfSharp" />
+  </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
