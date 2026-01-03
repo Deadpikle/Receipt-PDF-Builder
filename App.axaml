@@ -3,7 +3,8 @@
              x:Class="ReceiptPDFBuilder.App"
              xmlns:viewModels="clr-namespace:ReceiptPDFBuilder.ViewModels"
              xmlns:views="clr-namespace:ReceiptPDFBuilder.Views"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Default"
+             Name="Receipt PDF Builder">
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>

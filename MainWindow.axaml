@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ReceiptPDFBuilder.MainWindow"
-        Title="ReceiptPDFBuilder"
+        Title="Receipt PDF Builder"
         xmlns:vm="clr-namespace:ReceiptPDFBuilder.ViewModels"
         x:DataType="vm:MainWindowViewModel"
         Width="500"
