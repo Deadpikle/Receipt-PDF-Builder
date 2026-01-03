@@ -39,5 +39,6 @@
     </PackageReference>
     <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.3" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.10.1" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.11-preview20251127001" />
   </ItemGroup>
 </Project>
