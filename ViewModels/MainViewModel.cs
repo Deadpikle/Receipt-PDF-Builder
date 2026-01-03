@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
@@ -94,13 +95,30 @@ class MainViewModel : BaseViewModel, IFontResolver
     }
 
     // https://forum.pdfsharp.net/viewtopic.php?f=2&t=1025
-    private async Task CreatePDF(string folderName)
+    private async Task CreatePDF(string folderPath)
     {
         // TODO: calculate needed width for images based on page width and margins and all that?
         // TODO: resize (non-HEIC) images for smaller size...?
         IsCreatingPDF = true;
         var pdfDoc = new Document();
         var outputFileName = "MyReceipts.pdf";
+        var folderName = new DirectoryInfo(folderPath).Name;
+        LogInfo("Folder name is " + folderName);
+        if (folderName.Contains('-'))
+        {
+            // see if year/month format
+            var parts = folderName.Split('-');
+            LogInfo(string.Format("{0}, {1}", parts[0], parts[1]));
+            if (parts[0].Length == 4 &&
+                parts[1].Length <= 2 &&
+                int.TryParse(parts[0], out int year) && int.TryParse(parts[1], out int month))
+            {
+                outputFileName = string.Format("{0} {1} Receipts.pdf", 
+                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month), 
+                    year);
+                LogInfo("Auto-changed output file name to " + outputFileName);
+            }
+        }
         var section = pdfDoc.AddSection();
         section.PageSetup.PageFormat = PageFormat.Letter;
         section.PageSetup.PageWidth = "8.5in";
@@ -119,7 +137,7 @@ class MainViewModel : BaseViewModel, IFontResolver
         footerPar.AddText("--");
         section.Footers.Primary.Add(footerPar);
         //
-        var files = Directory.GetFiles(folderName);
+        var files = Directory.GetFiles(folderPath);
         files.Sort();
         GlobalFontSettings.FontResolver = this;
         GlobalFontSettings.FallbackFontResolver = new FailsafeFontResolver();
@@ -143,7 +161,7 @@ class MainViewModel : BaseViewModel, IFontResolver
             var isHEIC = fileName.EndsWith(".HEIC") || fileName.EndsWith(".heic");
             if (isHEIC)
             {
-                var convertedDir = Path.Combine(folderName, "converted");
+                var convertedDir = Path.Combine(folderPath, "converted");
                 if (!Directory.Exists(convertedDir))
                 {
                     Directory.CreateDirectory(convertedDir);
@@ -190,11 +208,11 @@ class MainViewModel : BaseViewModel, IFontResolver
         var pdfRenderer = new PdfDocumentRenderer
         {
             Document = pdfDoc,
-            WorkingDirectory = folderName
+            WorkingDirectory = folderPath
         };
         LogInfo("Rendering document...");
         pdfRenderer.RenderDocument();
-        string filename = Path.Join(folderName, outputFileName);
+        string filename = Path.Join(folderPath, outputFileName);
         LogInfo("Saving document to disk...");
         pdfRenderer.PdfDocument.Save(filename);
         LogInfo("Saved PDF output to: " + filename);
