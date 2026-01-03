@@ -7,7 +7,9 @@
         Title="ReceiptPDFBuilder"
         xmlns:vm="clr-namespace:ReceiptPDFBuilder.ViewModels"
         x:DataType="vm:MainWindowViewModel"
-        Width="300"
-        Height="300">
+        Width="500"
+        MinWidth="300"
+        Height="350"
+        MinHeight="300">
     <ContentControl Content="{Binding CurrentViewModel}"/>
 </Window>
