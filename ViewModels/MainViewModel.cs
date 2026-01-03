@@ -1,13 +1,11 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
-using HarfBuzzSharp;
 using ImageMagick;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using PdfSharp.Drawing;
 using PdfSharp.Fonts;
-using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Snippets.Font;
 using ReceiptPDFBuilder.Interfaces;
@@ -16,12 +14,33 @@ namespace ReceiptPDFBuilder.ViewModels;
 
 class MainViewModel : BaseViewModel, IFontResolver
 {
-
     private string _baseDir;
+    private bool _isCreatingPDF;
+    private string _createPDFLog;
 
     public MainViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
     {
         _baseDir = Path.GetDirectoryName(Environment.ProcessPath) ?? "";
+        _isCreatingPDF = false;
+        _createPDFLog = "Ready to create PDF!";
+    }
+
+    public bool IsCreatingPDF
+    {
+        get => _isCreatingPDF;
+        set { _isCreatingPDF = value; NotifyPropertyChanged(); }
+    }
+
+    public string CreatePDFLog
+    {
+        get => _createPDFLog;
+        set { _createPDFLog = value; NotifyPropertyChanged(); }
+    }
+
+    private void LogInfo(string log)
+    {
+        Console.WriteLine(log);
+        CreatePDFLog += Environment.NewLine + log;
     }
 
     public async void ChooseFolder()
@@ -37,10 +56,10 @@ class MainViewModel : BaseViewModel, IFontResolver
             if (folders.Count == 1)
             {
                 var folder = folders[0];
-                Console.WriteLine("Chosen folder: " + folder.Path.LocalPath);
+                LogInfo("Chosen folder: " + folder.Path.LocalPath);
                 if (Directory.Exists(folder.Path.LocalPath))
                 {
-                    CreatePDF(folder.Path.LocalPath);
+                    await Task.Run(() => CreatePDF(folder.Path.LocalPath));
                 }
             }
         }
@@ -48,7 +67,7 @@ class MainViewModel : BaseViewModel, IFontResolver
 
     public byte[]? GetFont(string faceName)
     {
-        Console.WriteLine("Getting font {0}", faceName);
+        LogInfo(string.Format("Getting font {0}", faceName));
         if (faceName == "Noto Sans JP")
         {
             return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf"));
@@ -62,7 +81,7 @@ class MainViewModel : BaseViewModel, IFontResolver
 
     public FontResolverInfo? ResolveTypeface(string familyName, bool bold, bool italic)
     {
-        Console.WriteLine("Resolving familyname {0}", familyName);
+        LogInfo(string.Format("Resolving familyname {0}", familyName));
         if (familyName == "Noto Sans JP")
         {
             if (bold)
@@ -75,8 +94,11 @@ class MainViewModel : BaseViewModel, IFontResolver
     }
 
     // https://forum.pdfsharp.net/viewtopic.php?f=2&t=1025
-    private void CreatePDF(string folderName)
+    private async Task CreatePDF(string folderName)
     {
+        // TODO: calculate needed width for images based on page width and margins and all that?
+        // TODO: resize (non-HEIC) images for smaller size...?
+        IsCreatingPDF = true;
         var pdfDoc = new Document();
         var outputFileName = "MyReceipts.pdf";
         var section = pdfDoc.AddSection();
@@ -109,7 +131,6 @@ class MainViewModel : BaseViewModel, IFontResolver
             {
                 continue;
             }
-            // TODO: calculate needed width for images based on page width and margins and all that?
             var imageTitlePar = section.AddParagraph();
             imageTitlePar.Format.Alignment = ParagraphAlignment.Center;
             imageTitlePar.Format.Font.Size = 12;
@@ -133,16 +154,16 @@ class MainViewModel : BaseViewModel, IFontResolver
                 var outputPath = Path.Combine(convertedDir, info.Name + ".jpg");
                 mImage.Quality = 80;
                 mImage.Scale((uint)Math.Floor(mImage.Width * 0.5), (uint)Math.Floor(mImage.Height * 0.5));
-                mImage.Write(outputPath);
+                await mImage.WriteAsync(outputPath);
                 fileName = Path.Combine("Converted", info.Name + ".jpg");
-                Console.WriteLine("HEIC image fileName is now {0}", fileName);
+                LogInfo(string.Format("Converted HEIC image to JPEG; fileName is now {0}", fileName));
             }
             var paragraph = section.AddParagraph();
             paragraph.Format.Alignment = ParagraphAlignment.Center;
             var image = paragraph.AddImage(fileName);
             image.LockAspectRatio = true;
             image.Width = 400; // can't be too wide now...not sure why...maybe due to margins...
-            Console.WriteLine("Added image: {0}", fileName);
+            LogInfo(string.Format("Added image: {0}", fileName));
             if (isPDF)
             {
                 // add other PDF pages
@@ -166,12 +187,18 @@ class MainViewModel : BaseViewModel, IFontResolver
                 section.AddPageBreak();
             }
         }
-        var pdfRenderer = new PdfDocumentRenderer();
-        pdfRenderer.Document = pdfDoc;
-        pdfRenderer.WorkingDirectory = folderName;
+        var pdfRenderer = new PdfDocumentRenderer
+        {
+            Document = pdfDoc,
+            WorkingDirectory = folderName
+        };
+        LogInfo("Rendering document...");
         pdfRenderer.RenderDocument();
         string filename = Path.Join(folderName, outputFileName);
+        LogInfo("Saving document to disk...");
         pdfRenderer.PdfDocument.Save(filename);
-        Console.WriteLine(filename);
+        LogInfo("PDF output to: " + filename);
+        IsCreatingPDF = false;
+        return;
     }
 }

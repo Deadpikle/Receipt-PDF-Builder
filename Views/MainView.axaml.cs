@@ -9,6 +9,12 @@ namespace ReceiptPDFBuilder.Views
         public MainView()
         {
             this.InitializeComponent();
+            LogBlock.PropertyChanged += LogBlock_PropertyChanged;
+        }
+
+        private void LogBlock_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            LogScrollView.ScrollToEnd();
         }
     }
 }
