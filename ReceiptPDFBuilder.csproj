@@ -9,6 +9,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
+    <PublishTrimmed>true</PublishTrimmed>
     <AssemblyName>Receipt PDF Builder</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
