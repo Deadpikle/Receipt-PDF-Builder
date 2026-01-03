@@ -10,6 +10,7 @@
   <Grid ColumnDefinitions="Auto, *"
         RowDefinitions="Auto, *">
     <Label Content="Easy Receipt Folder -> PDF Builder"
+           FontSize="16"
            Grid.Row="0"
            Grid.ColumnSpan="2"
            FontWeight="Bold"

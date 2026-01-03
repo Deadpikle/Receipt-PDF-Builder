@@ -103,6 +103,7 @@ class MainViewModel : BaseViewModel, IFontResolver
         var pdfDoc = new Document();
         var outputFileName = "MyReceipts.pdf";
         var folderName = new DirectoryInfo(folderPath).Name;
+        const int imageWidth = 425;
         LogInfo("Folder name is " + folderName);
         if (folderName.Contains('-'))
         {
@@ -130,11 +131,14 @@ class MainViewModel : BaseViewModel, IFontResolver
         // setup footer for page number
         var footerPar = new Paragraph();
         footerPar.Format.Alignment = ParagraphAlignment.Center;
+        footerPar.Format.Font.Size = 10;
         footerPar.AddText("--Page ");
         footerPar.AddPageField();
         footerPar.AddText(" of ");
         footerPar.AddNumPagesField();
         footerPar.AddText("--");
+        footerPar.AddLineBreak();
+        footerPar.AddText("Report generated on " + DateTime.Now.ToString("f"));
         section.Footers.Primary.Add(footerPar);
         //
         var files = Directory.GetFiles(folderPath);
@@ -180,7 +184,7 @@ class MainViewModel : BaseViewModel, IFontResolver
             paragraph.Format.Alignment = ParagraphAlignment.Center;
             var image = paragraph.AddImage(fileName);
             image.LockAspectRatio = true;
-            image.Width = 400; // can't be too wide now...not sure why...maybe due to margins...
+            image.Width = imageWidth; // can't be too wide now...not sure why...maybe due to margins...
             LogInfo(string.Format("Added image: {0}", fileName));
             if (isPDF)
             {
@@ -197,7 +201,7 @@ class MainViewModel : BaseViewModel, IFontResolver
                     paragraph.Format.Alignment = ParagraphAlignment.Center;
                     image = paragraph.AddImage(file + "#" + j);
                     image.LockAspectRatio = true;
-                    image.Width = 400;
+                    image.Width = imageWidth;
                 }
             }
             if (i < files.Length - 1)
