@@ -104,12 +104,10 @@ class MainViewModel : BaseViewModel, IFontResolver
         var outputFileName = "MyReceipts.pdf";
         var folderName = new DirectoryInfo(folderPath).Name;
         const int imageWidth = 425;
-        LogInfo("Folder name is " + folderName);
         if (folderName.Contains('-'))
         {
             // see if year/month format
             var parts = folderName.Split('-');
-            LogInfo(string.Format("{0}, {1}", parts[0], parts[1]));
             if (parts[0].Length == 4 &&
                 parts[1].Length <= 2 &&
                 int.TryParse(parts[0], out int year) && int.TryParse(parts[1], out int month))
