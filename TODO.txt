@@ -1,0 +1,2 @@
+-Published app has unneeded .DSYM file
+-Published app has Assets folder already copied to it; don't want that in output macOS folder but it's being copied there anyway
