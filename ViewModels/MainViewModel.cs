@@ -89,10 +89,20 @@ class MainViewModel : BaseViewModel, IFontResolver
         LogInfo(string.Format("Loading font {0}", faceName));
         if (faceName == "Noto Sans JP")
         {
-            return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf"));
+            var path = Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf");
+            if (!File.Exists(path))
+            {
+                path = Path.Combine(_baseDir, "../Resources/Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf");
+            }
+            return File.ReadAllBytes(path);
         }
         if (faceName == "Noto Sans JP Bold")
         {
+            var path = Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf");
+            if (!File.Exists(path))
+            {
+                path = Path.Combine(_baseDir, "../Resources/Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf");
+            }
             return File.ReadAllBytes(Path.Combine(_baseDir, "Assets/Fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf"));
         }
         return null;
